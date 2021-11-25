@@ -29,41 +29,41 @@
             <g:form resource="${this.txn}" method="POST" enctype='multipart/form-data'>
                 <fieldset class="form">
 %{--                    <f:all bean="txn" except="docs"/>--}%
-                    <div class='fieldcontain required'>
-                        <label for='signCoordinates'>Sign Coordinates
-                            <span class='required-indicator'>*</span>
-                        </label><input type="text" name="docs[0].signCoordinates" value="" required="" id="signCoordinates" />
-                    </div>
-                    <div class='fieldcontain required'>
-                        <label for='page'>Page
-                            <span class='required-indicator'>*</span>
-                        </label><input type="number" name="docs[0].page" value="" required="" id="page" />
-                    </div>
-                    <div class='fieldcontain'>
-                        <label for='isQRCoordinates'>Has QR Coordinates</label>
-                        <input type="hidden" name="docs[0]._isQRCoordinates" />
-                        <input type="checkbox" name="docs[0].isQRCoordinates" id="isQRCoordinates"  />
-                    </div>
-                    <div class='fieldcontain required'>
-                        <label for='qrCoordinates'>Qr Coordinates
-                            <span class='required-indicator'>*</span>
-                        </label><input type="text" name="docs[0].qrCoordinates" value="" required="" id="qrCoordinates" />
-                    </div>
+%{--                    <div class='fieldcontain required'>--}%
+%{--                        <label for='signCoordinates'>Sign Coordinates--}%
+%{--                            <span class='required-indicator'>*</span>--}%
+%{--                        </label><input type="text" name="docs[0].signCoordinates" value="" required="" id="signCoordinates" />--}%
+%{--                    </div>--}%
+%{--                    <div class='fieldcontain required'>--}%
+%{--                        <label for='page'>Page--}%
+%{--                            <span class='required-indicator'>*</span>--}%
+%{--                        </label><input type="number" name="docs[0].page" value="" required="" id="page" />--}%
+%{--                    </div>--}%
+%{--                    <div class='fieldcontain'>--}%
+%{--                        <label for='isQRCoordinates'>Has QR Coordinates</label>--}%
+%{--                        <input type="hidden" name="docs[0]._isQRCoordinates" />--}%
+%{--                        <input type="checkbox" name="docs[0].isQRCoordinates" id="isQRCoordinates"  />--}%
+%{--                    </div>--}%
+%{--                    <div class='fieldcontain required'>--}%
+%{--                        <label for='qrCoordinates'>Qr Coordinates--}%
+%{--                            <span class='required-indicator'>*</span>--}%
+%{--                        </label><input type="text" name="docs[0].qrCoordinates" value="" required="" id="qrCoordinates" />--}%
+%{--                    </div>--}%
                     <div class='fieldcontain required'>
                         <label for='file'>Document to be signed
                             <span class='required-indicator'>*</span>
                         </label><input type="file" name="file" value="" required="" id="file" multiple/>
                     </div>
-                    <div class='fieldcontain required'>
-                        <label for='docInfo'>Doc Info
-                            <span class='required-indicator'>*</span>
-                        </label><input type="text" name="docs[0].docInfo" value="" required="" id="docInfo" />
-                    </div>
-                    <div class='fieldcontain'>
-                        <label for='lockPdf'>Lock PDF for other signer?</label>
-                        <input type="hidden" name="docs[0]._lockPdf" />
-                        <input type="checkbox" name="docs[0].lockPdf" id="lockPdf"  />
-                    </div>
+%{--                    <div class='fieldcontain required'>--}%
+%{--                        <label for='docInfo'>Doc Info--}%
+%{--                            <span class='required-indicator'>*</span>--}%
+%{--                        </label><input type="text" name="docs[0].docInfo" value="" required="" id="docInfo" />--}%
+%{--                    </div>--}%
+%{--                    <div class='fieldcontain'>--}%
+%{--                        <label for='lockPdf'>Lock PDF for other signer?</label>--}%
+%{--                        <input type="hidden" name="docs[0]._lockPdf" />--}%
+%{--                        <input type="checkbox" name="docs[0].lockPdf" id="lockPdf"  />--}%
+%{--                    </div>--}%
                 </fieldset>
                 <fieldset class="buttons">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
