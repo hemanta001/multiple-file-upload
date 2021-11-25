@@ -4,6 +4,8 @@ import grails.converters.XML
 import grails.validation.ValidationException
 import grails.rest.*
 import grails.web.http.HttpHeaders
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.w3c.dom.Attr
 import org.w3c.dom.Element
 
@@ -13,13 +15,16 @@ import javax.xml.transform.Transformer
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 import static org.springframework.http.HttpStatus.*
 //import org.apache.commons.httpclient.methods.PostMethod
 
 class TxnController {
     //GrailsApplication grailsApplication = ApplicationHolder.application
-    def txnService
+    TxnService txnService
+    final static Pattern PATTERN = Pattern.compile("(.*?)(?:\\((\\d+)\\))?(\\.[^.]*)?");
 
     String sipId = grailsApplication.config.getProperty('sip.id');
     String sipAccessKey = grailsApplication.config.getProperty('sip.access-key');
@@ -63,7 +68,12 @@ class TxnController {
 
         try {
            //String xmlValue = generateXML(txn)
-            txnService.save(txn)
+            request.getFiles("file").each { file ->
+               uploadFile((MultipartFile)file);
+            }
+            redirect(action: "index")
+//            txnService.save(txn)
+            return
             //respond xmlService.generateXML()
         } catch (ValidationException e) {
             respond txn.errors, view: 'create'
@@ -275,4 +285,31 @@ class TxnController {
             return input? 1 : 0;
         }
     }
+
+    void uploadFile(MultipartFile file) {
+                    def fileName = file.originalFilename
+                    def homeDir = new java.io.File(System.getProperty("user.home"))
+                    java.io.File theDir = new java.io.File(homeDir, "txn");
+                    if (!theDir.exists()) {
+                        theDir.mkdir();
+                    }
+
+                    abc:
+                    boolean check = new java.io.File(homeDir, "txn/" + fileName).exists()
+                    if (check) {
+                        Matcher m = PATTERN.matcher(fileName);
+                        if (m.matches()) {
+                            String prefix = m.group(1);
+                            String last = m.group(2);
+                            String suffix = m.group(3);
+                            if (suffix == null) suffix = "";
+                            int count = last != null ? Integer.parseInt(last) : 0;
+                            count++;
+                            fileName = prefix + "(" + count + ")" + suffix;
+                            continue abc
+                        }
+                    }
+                    java.io.File fileDest = new java.io.File(homeDir, "txn/${fileName}")
+                    file.transferTo(fileDest)
+        }
 }

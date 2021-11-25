@@ -9,7 +9,7 @@ class Document {
     String docInfo
 
 
-    static belongsTo = [txn: Txn]
+    static belongsTo = [txn: Txn,file:File]
 
     static mapping = {
 

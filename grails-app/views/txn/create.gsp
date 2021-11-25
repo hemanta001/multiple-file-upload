@@ -26,9 +26,9 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
-            <g:form resource="${this.txn}" method="POST">
+            <g:form resource="${this.txn}" method="POST" enctype='multipart/form-data'>
                 <fieldset class="form">
-                    <f:all bean="txn" except="docs"/>
+%{--                    <f:all bean="txn" except="docs"/>--}%
                     <div class='fieldcontain required'>
                         <label for='signCoordinates'>Sign Coordinates
                             <span class='required-indicator'>*</span>
@@ -52,7 +52,7 @@
                     <div class='fieldcontain required'>
                         <label for='file'>Document to be signed
                             <span class='required-indicator'>*</span>
-                        </label><input type="file" name="file" value="" required="" id="file" />
+                        </label><input type="file" name="file" value="" required="" id="file" multiple/>
                     </div>
                     <div class='fieldcontain required'>
                         <label for='docInfo'>Doc Info
