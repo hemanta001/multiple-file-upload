@@ -89,7 +89,12 @@ class TxnController {
             }
             txnService.save(txn)
              xmlValue=generateXML(txn)
-            initiateRequestPayload(xmlValue);
+            try{
+                initiateRequestPayload(xmlValue);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         } catch (ValidationException e) {
             respond txn.errors, view: 'create'
             return
