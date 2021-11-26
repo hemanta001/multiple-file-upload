@@ -153,7 +153,6 @@
     $(function () {
         $(document).on('click', '.btn-add', function (e) {
             e.preventDefault();
-            // $('input[name="docs[0].signCoordinates"]').attr('name', 'rajeshHamal');
             var controlForm = $('.controls:first'),
                 currentEntry = $(this).parents('.entry:first'),
                 htmlDiv=currentEntry.clone();
