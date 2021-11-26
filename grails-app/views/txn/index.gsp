@@ -18,11 +18,51 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:table collection="${txnList}" />
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Signer</th>
+                    <th scope="col">UserDocs</th>
+                    <th scope="col">Txn Type</th>
+                    <th scope="col">Txn Id</th>
+                    <th>Check</th>
+                </tr>
+                </thead>
+                <tbody>
+                <g:each in="${txnList}" var="txn" status="i">
+                <tr>
+                    <th scope="row">${i+1}</th>
+                    <td>${txn.signer?.email}</td>
+                    <td>${txn.docs}</td>
+                    <td>${txn.txnType}</td>
+                    <td>${txn.txnId}</td>
+                    <td> <g:link class="btn btn-primary btn-sm" onclick="checkStatus(${txn.id})">Check</g:link></td>
+
+                </tr>
+                </g:each>
+                </tbody>
+            </table>
+%{--            <f:table collection="${txnList}" />--}%
 
             <div class="pagination">
                 <g:paginate total="${txnCount ?: 0}" />
             </div>
         </div>
+    <script>
+function checkStatus(id){
+    $.ajax({
+        url: "/txn/checkStatus?id="+id,
+        type: "GET",
+        contentType: false,
+        cache: false,
+        async: false,
+        success: function (result) {
+
+        }
+    });
+
+}
+    </script>
     </body>
 </html>

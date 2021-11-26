@@ -3,6 +3,9 @@ import grails.converters.XML
 import grails.validation.ValidationException
 import grails.rest.*
 import grails.web.http.HttpHeaders
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
+import org.grails.web.converters.configuration.DefaultConverterConfiguration
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.w3c.dom.Attr
@@ -57,37 +60,49 @@ class TxnController {
     }
 
     def checkStatus() {
-        String xml = "";
+        def xmlValue=generateXML(txnService.get(Long.parseLong(params.id)))
+        def http = new HTTPBuilder("${checkStatus}")
+        http.request(Method.POST) {
+            requestContentType = 'application/xml'
+            body = xmlValue
+            headers.'Content-Type' = 'application/xml'
+            response.success = { resp, json ->
+                print "success is"
+                print resp
+                print json
+            }
+        }
     }
+
 
     def save(Txn txn) {
         if (txn == null) {
             notFound()
             return
         }
-
-//        try {
+      def xmlValue
+        try {
             //String xmlValue = generateXML(txn)
             List files=request.getFiles("file")
             for(int i=0;i<files.size();i++){
               txn.docs[i].file=uploadFile((MultipartFile) files[i])
             }
             txnService.save(txn)
-            redirect(action: "index")
-            //respond xmlService.generateXML()
-//        } catch (ValidationException e) {
-//            respond txn.errors, view: 'create'
-//            return
-//        }
+             xmlValue=generateXML(txn)
+            initiateRequestPayload(xmlValue);
+        } catch (ValidationException e) {
+            respond txn.errors, view: 'create'
+            return
+        }
 
-        //render view:'initiateRequest', model:[id: txn.id, xmlValue: xmlValue]
-//        request.withFormat {
-//            form multipartForm {
-//                flash.message = message(code: 'default.created.message', args: [message(code: 'txn.label', default: 'Txn'), txn.id])
-//                redirect txn
-//            }
-//            '*' { respond txn, [status: CREATED] }
-//        }
+        render view:'initiateRequest', model:[id: txn.id, xmlValue: xmlValue]
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.created.message', args: [message(code: 'txn.label', default: 'Txn'), txn.id])
+                redirect txn
+            }
+            '*' { respond txn, [status: CREATED] }
+        }
     }
 
     def edit(Long id) {
@@ -144,9 +159,11 @@ class TxnController {
     }
 
     def generateXML(Txn txn) {
-        String txnDate = txn.dateCreated.toString().replace(' ', 'T').takeBefore('.');
+//        String txnDate = txn.dateCreated.toString().replace(' ', 'T').takeBefore('.');
+        String txnDate = txn.dateCreated.toString().replace(' ', 'T');
+
         String sipAccessKeyStr = txn.txnId + txnDate + sipAccessKey;
-        String sipAccessKeyHash = sipAccessKeyStr.digest('SHA-256')
+        String sipAccessKeyHash = sipAccessKeyStr.encodeAsSHA256()
         DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
         org.w3c.dom.Document xmlDoc = documentBuilder.newDocument();
@@ -319,4 +336,19 @@ class TxnController {
         documentFile.setSize("size");
         return documentFile;
     }
+    def initiateRequestPayload(String xmlBody) {
+            def http = new HTTPBuilder("${initiateRequest}")
+            http.request(Method.POST) {
+                requestContentType = 'application/xml'
+                body = xmlBody
+                headers.'Content-Type' = 'application/xml'
+                response.success = { resp, json ->
+                    print "success is"
+                    print resp
+                    print json
+                }
+            }
+
+    }
+
 }

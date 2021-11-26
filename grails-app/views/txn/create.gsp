@@ -119,13 +119,13 @@
 <br>
                                         <div class="controls">
                                             <div class="entry input-group upload-input-group">
-                                                <input type="text" name="docs[0].signCoordinates" placeholder="signCoordinates" class="form-control" required=""/>
-                                                <input type="number" name="docs[0].page" placeholder="page" value="" class="form-control" required=""/>
-                                                <input type="checkbox" name="docs[0].isQRCoordinates"  placeholder="isQr" id="isQRCoordinates" class="form-control" />
-                                                <input type="text" name="docs[0].qrCoordinates" value="" placeholder="qrCoordinates" required="" class="form-control" id="qrCoordinates" />
-                                                <input class="form-control" name="file" type="file" id="field1">
-                                                <input type="text" name="docs[0].docInfo" placeholder="docInfo" class="form-control" value="" required="" id="docInfo" />
-                                                <input type="checkbox" name="docs[0].lockPdf" placeholder="lockPdf" id="lockPdf" class="form-control"/>
+                                                <input type="text" name="docs[0].signCoordinates" placeholder="signCoordinates" class="signCoordinates form-control" required=""/>
+                                                <input type="number" name="docs[0].page" placeholder="page" value="" class="page form-control" required=""/>
+                                                <input type="checkbox" name="docs[0].isQRCoordinates"  placeholder="isQr"  class="isQRCoordinates form-control" />
+                                                <input type="text" name="docs[0].qrCoordinates" value="" placeholder="qrCoordinates" required="" class="qrCoordinates form-control" />
+                                                <input class="form-control" name="file" type="file">
+                                                <input type="text" name="docs[0].docInfo" placeholder="docInfo" class="docInfo form-control" value="" required=""  />
+                                                <input type="checkbox" name="docs[0].lockPdf" placeholder="lockPdf" class="lockPdf form-control"/>
                                                 <button class="btn btn-upload btn-success btn-add" type="button">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
@@ -149,22 +149,32 @@
         </div>
     </div>
 <script>
+    var count = 1
     $(function () {
         $(document).on('click', '.btn-add', function (e) {
             e.preventDefault();
-
+            // $('input[name="docs[0].signCoordinates"]').attr('name', 'rajeshHamal');
             var controlForm = $('.controls:first'),
                 currentEntry = $(this).parents('.entry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
+                htmlDiv=currentEntry.clone();
+            htmlDiv.find('.signCoordinates').attr({ name: "docs["+count+"].signCoordinates"});
+            htmlDiv.find('.page').attr({ name: "docs["+count+"].page"});
+            htmlDiv.find('.isQRCoordinates').attr({ name: "docs["+count+"].isQRCoordinates"});
+            htmlDiv.find('.qrCoordinates').attr({ name: "docs["+count+"].qrCoordinates"});
+            htmlDiv.find('.docInfo').attr({ name: "docs["+count+"].docInfo"});
+            htmlDiv.find('.lockPdf').attr({ name: "docs["+count+"].lockPdf"});
+
+            newEntry = $(htmlDiv).appendTo(controlForm);
 
             newEntry.find('input').val('');
             controlForm.find('.entry:not(:last) .btn-add')
                 .removeClass('btn-add').addClass('btn-remove')
                 .removeClass('btn-success').addClass('btn-danger')
                 .html('<span class="fa fa-trash"></span>');
+            count++;
         }).on('click', '.btn-remove', function (e) {
             $(this).parents('.entry:first').remove();
-
+            count--;
             e.preventDefault();
             return false;
         });

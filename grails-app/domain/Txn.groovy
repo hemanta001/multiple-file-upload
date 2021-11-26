@@ -6,7 +6,7 @@ class Txn {
     Integer txnType = 1
     Boolean notifyUser=false
     User signer
-    Date dateCreated
+    Date dateCreated=new Date()
     Date lastUpdated
     static hasMany = [docs: Document]
 

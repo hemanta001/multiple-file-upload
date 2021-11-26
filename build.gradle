@@ -54,6 +54,7 @@ dependencies {
     runtime "org.apache.tomcat:tomcat-jdbc"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.14.8"
     testCompile "org.grails:grails-gorm-testing-support"
+    compile "org.codehaus.groovy.modules.http-builder:http-builder:0.5.2"
     testCompile "org.grails:grails-web-testing-support"
     testCompile "org.grails.plugins:geb:1.1.2"
     testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:2.47.1"
