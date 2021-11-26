@@ -103,7 +103,7 @@
                                         <div class='fieldcontain required'>
                                             <label for='notifyUser'>Notify User
                                                 <span class='required-indicator'>*</span>
-                                            </label><input type="checkbox" name="notifyUser" required="" id="notifyUser" />
+                                            </label><input type="checkbox" name="notifyUser" id="notifyUser" />
                                         </div>
                                         <div class='fieldcontain required'>
                                             <label for='signer'>Signer
@@ -140,7 +140,7 @@
                                                 </div>
                                                 <div>
                                                     <label for="file">file</label>
-                                                <input class="form-control" id="file" name="file" type="file">
+                                                <input class="form-control" id="file" name="file" type="file" required>
                                                 </div>
                                                 <div>
                                                     <label for="docInfo">DocInfo</label>
