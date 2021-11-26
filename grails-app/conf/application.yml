@@ -135,8 +135,8 @@ sip:
     assuranceLevel: M
 url:
     emdha:
-        checkStatus: https://esign-dev.emdha.sa/eSign/checkStatus
-        initiateRequest: https://esign-dev.emdha.sa/eSign/initiateRequest
+        checkStatus: http://esign-dev.emdha.sa/eSign/checkStatus
+        initiateRequest: http://esign-dev.emdha.sa/eSign/initiateRequest
         redirection: https://gateway.dev.emdha.com.sa
     sip:
         responseUrl: http://10.60.110.200:8080/callback
