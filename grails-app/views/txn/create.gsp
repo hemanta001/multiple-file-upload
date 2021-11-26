@@ -26,7 +26,13 @@
         </style>
     </head>
     <body>
-%{--        <a href="#create-txn" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>--}%
+    <div class="nav" role="navigation">
+        <ul>
+            <li><g:link class="btn btn-primary btn-sm" action="index">List</g:link></li>
+        </ul>
+    </div>
+
+    %{--        <a href="#create-txn" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>--}%
 %{--        <div class="nav" role="navigation">--}%
 %{--            <ul>--}%
 %{--                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>--}%
@@ -122,32 +128,32 @@
 <br>
                                         <div class="controls">
                                             <div class="entry input-group upload-input-group">
-                                                <div>
-                                                    <label for="signCoordinates">signCoordinates</label>
+                                                <div class="col-md-2">
+                                                    <label for="signCoordinates">SignCoordinates</label>
                                                     <input type="text" name="docs[0].signCoordinates" id="signCoordinates" placeholder="signCoordinates" class="signCoordinates form-control" required=""/>
                                                 </div>
-                                                <div>
-                                                    <label for="page">page</label>
+                                                <div class="col-md-1">
+                                                    <label for="page">Page</label>
                                                 <input type="number" name="docs[0].page" placeholder="page" id="page" value="" class="page form-control" required=""/>
                                                 </div>
-                                                <div>
-                                                    <label for="isQRCoordinates">isQR</label>
+                                                <div class="col-md-1">
+                                                    <label for="isQRCoordinates">QR</label>
                                                 <input type="checkbox" name="docs[0].isQRCoordinates" id="isQRCoordinates" placeholder="isQr"  class="isQRCoordinates form-control" />
                                                 </div>
-                                                <div>
-                                                    <label for="qrCoordinates">qrCoordinates</label>
+                                                <div class="col-md-2">
+                                                    <label for="qrCoordinates">Coordinates</label>
                                                 <input type="text" name="docs[0].qrCoordinates" id="qrCoordinates" value="" placeholder="qrCoordinates" required="" class="qrCoordinates form-control" />
                                                 </div>
-                                                <div>
-                                                    <label for="file">file</label>
+                                                <div class="col-md-2">
+                                                    <label for="file">File</label>
                                                 <input class="form-control" id="file" name="file" type="file" required>
                                                 </div>
-                                                <div>
+                                                <div class="col-md-2">
                                                     <label for="docInfo">DocInfo</label>
                                                 <input type="text" name="docs[0].docInfo" placeholder="docInfo" id="docInfo" class="docInfo form-control" value="" required=""  />
                                                 </div>
-                                                <div>
-                                                    <label for="lockPdf">lockPdf</label>
+                                                <div class="col-md-1">
+                                                    <label for="lockPdf">LockPdf</label>
 
                                                     <input type="checkbox" name="docs[0].lockPdf" id="lockPdf" placeholder="lockPdf" class="lockPdf form-control"/>
                                                 </div>
