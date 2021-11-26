@@ -9,12 +9,12 @@ class Document {
     String docInfo
 
 
-    static belongsTo = [txn: Txn,file:File]
+    static belongsTo = [txn: Txn,file:FileTxn]
 
     static mapping = {
 
     }
     static constraints = {
-
+file nullable: true
     }
 }

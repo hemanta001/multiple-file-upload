@@ -1,20 +1,19 @@
 
 
-class Txn {
+class FileTxn {
 
-    String txnId
-    Integer txnType = 1
-    Boolean notifyUser=false
-    User signer
     Date dateCreated
     Date lastUpdated
-    static hasMany = [docs: Document]
+    String originalFilename
+    String extension
+    String contentType
+    String name
+    String size
 
     static constraints = {
         dateCreated nullable: true
         lastUpdated nullable: true
     }
-
     def beforeInsert() {
         dateCreated = new Date()
     }

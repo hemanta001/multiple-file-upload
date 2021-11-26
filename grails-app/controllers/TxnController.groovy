@@ -1,5 +1,4 @@
-
-
+import grails.converters.JSON
 import grails.converters.XML
 import grails.validation.ValidationException
 import grails.rest.*
@@ -19,6 +18,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 import static org.springframework.http.HttpStatus.*
+
 //import org.apache.commons.httpclient.methods.PostMethod
 
 class TxnController {
@@ -51,7 +51,7 @@ class TxnController {
     }
 
     def initiateRequest(Long id) {
-       Txn t = txnService.get(id)
+        Txn t = txnService.get(id)
 
         [xmlvalue: generateXML(t)]
     }
@@ -66,28 +66,28 @@ class TxnController {
             return
         }
 
-        try {
-           //String xmlValue = generateXML(txn)
-            request.getFiles("file").each { file ->
-               uploadFile((MultipartFile)file);
+//        try {
+            //String xmlValue = generateXML(txn)
+            List files=request.getFiles("file")
+            for(int i=0;i<files.size();i++){
+              txn.docs[i].file=uploadFile((MultipartFile) files[i])
             }
+            txnService.save(txn)
             redirect(action: "index")
-//            txnService.save(txn)
-            return
             //respond xmlService.generateXML()
-        } catch (ValidationException e) {
-            respond txn.errors, view: 'create'
-            return
-        }
+//        } catch (ValidationException e) {
+//            respond txn.errors, view: 'create'
+//            return
+//        }
 
         //render view:'initiateRequest', model:[id: txn.id, xmlValue: xmlValue]
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'txn.label', default: 'Txn'), txn.id])
-                redirect txn
-            }
-            '*' { respond txn, [status: CREATED] }
-        }
+//        request.withFormat {
+//            form multipartForm {
+//                flash.message = message(code: 'default.created.message', args: [message(code: 'txn.label', default: 'Txn'), txn.id])
+//                redirect txn
+//            }
+//            '*' { respond txn, [status: CREATED] }
+//        }
     }
 
     def edit(Long id) {
@@ -143,8 +143,8 @@ class TxnController {
         }
     }
 
-    def generateXML(Txn txn){
-        String txnDate = txn.dateCreated.toString().replace(' ','T').takeBefore('.');
+    def generateXML(Txn txn) {
+        String txnDate = txn.dateCreated.toString().replace(' ', 'T').takeBefore('.');
         String sipAccessKeyStr = txn.txnId + txnDate + sipAccessKey;
         String sipAccessKeyHash = sipAccessKeyStr.digest('SHA-256')
         DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -217,7 +217,7 @@ class TxnController {
         signAlgorithm.setValue("ECC");
         root.setAttributeNode(signAlgorithm);
 
-        txn.docs.each{
+        txn.docs.each {
             Element document = xmlDoc.createElement("document");
             docs.appendChild(document);
 
@@ -238,17 +238,17 @@ class TxnController {
             document.setAttributeNode(mandateQr);
 
             Attr qrCoordinates = xmlDoc.createAttribute("qrCoordinates");
-            if(it.qrCoordinates == 1){
+            if (it.qrCoordinates == 1) {
                 qrCoordinates.setValue(it.qrCoordinates);
-            }else{
+            } else {
                 qrCoordinates.setValue("");
             }
             document.setAttributeNode(qrCoordinates);
-            if(it.lockPdf == 1){
+            if (it.lockPdf == 1) {
                 Attr lockPdf = xmlDoc.createAttribute("lockPdf");
-                if(it.lockPdf == 1){
+                if (it.lockPdf == 1) {
                     lockPdf.setValue(it.lockPdf.toString())
-                }else{
+                } else {
                     lockPdf.setValue("")
                 }
                 document.setAttributeNode(lockPdf);
@@ -282,34 +282,41 @@ class TxnController {
         if (input == null) {
             return "null";
         } else {
-            return input? 1 : 0;
+            return input ? 1 : 0;
         }
     }
 
-    void uploadFile(MultipartFile file) {
-                    def fileName = file.originalFilename
-                    def homeDir = new java.io.File(System.getProperty("user.home"))
-                    java.io.File theDir = new java.io.File(homeDir, "txn");
-                    if (!theDir.exists()) {
-                        theDir.mkdir();
-                    }
-
-                    abc:
-                    boolean check = new java.io.File(homeDir, "txn/" + fileName).exists()
-                    if (check) {
-                        Matcher m = PATTERN.matcher(fileName);
-                        if (m.matches()) {
-                            String prefix = m.group(1);
-                            String last = m.group(2);
-                            String suffix = m.group(3);
-                            if (suffix == null) suffix = "";
-                            int count = last != null ? Integer.parseInt(last) : 0;
-                            count++;
-                            fileName = prefix + "(" + count + ")" + suffix;
-                            continue abc
-                        }
-                    }
-                    java.io.File fileDest = new java.io.File(homeDir, "txn/${fileName}")
-                    file.transferTo(fileDest)
+    FileTxn uploadFile(MultipartFile file) {
+        def fileName = file.originalFilename
+        def homeDir = new File(System.getProperty("user.home"))
+        File theDir = new File(homeDir, "txn");
+        if (!theDir.exists()) {
+            theDir.mkdir();
         }
+
+        abc:
+        boolean check = new File(homeDir, "txn/" + fileName).exists()
+        if (check) {
+            Matcher m = PATTERN.matcher(fileName);
+            if (m.matches()) {
+                String prefix = m.group(1);
+                String last = m.group(2);
+                String suffix = m.group(3);
+                if (suffix == null) suffix = "";
+                int count = last != null ? Integer.parseInt(last) : 0;
+                count++;
+                fileName = prefix + "(" + count + ")" + suffix;
+                continue abc
+            }
+        }
+        File fileDest = new File(homeDir, "txn/${fileName}")
+        file.transferTo(fileDest)
+        FileTxn documentFile = new FileTxn();
+        documentFile.setName(fileName);
+        documentFile.setOriginalFilename(fileName);
+        documentFile.setExtension("extension");
+        documentFile.setContentType("contentType");
+        documentFile.setSize("size");
+        return documentFile;
+    }
 }

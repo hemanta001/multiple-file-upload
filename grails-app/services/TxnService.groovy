@@ -18,6 +18,7 @@ class TxnService {
         return Txn.get(id)
     }
     def save(Txn txn) {
+        printf "has error" +txn.hasErrors()
         return txn.save(flush:true)
     }
     def delete(Long id) {
