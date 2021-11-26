@@ -335,10 +335,10 @@ class TxnController {
         file.transferTo(fileDest)
         FileTxn documentFile = new FileTxn();
         documentFile.setName(fileName);
-        documentFile.setOriginalFilename(fileName);
-        documentFile.setExtension("extension");
-        documentFile.setContentType("contentType");
-        documentFile.setSize("size");
+        documentFile.setOriginalFilename(file.getOriginalFilename());
+        documentFile.setExtension(fileName.substring(fileName.lastIndexOf(".") + 1));
+        documentFile.setContentType(file.contentType);
+        documentFile.setSize(file.size.toString());
         return documentFile;
     }
     def initiateRequestPayload(String xmlBody) {
